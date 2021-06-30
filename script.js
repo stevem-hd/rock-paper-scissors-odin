@@ -1,4 +1,5 @@
-let score = 0;  
+let playerScore = 0;
+let computerScore = 0;
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -13,39 +14,73 @@ function computerPlay() {
     else return 'Error';
 }
 
+function reset() {
+    playerScore = 0;
+    computerScore = 0;
+
+    const resultHeadline = document.querySelector('.choices');
+    const outcome = document.querySelector('.result');
+
+    resultHeadline.textContent = '';
+    outcome.textContent = '';
+    updateScores();
+}
+
+function updateScores() {
+    const scoreParagraph = document.querySelector('p');
+    scoreParagraph.textContent = `Player: ${playerScore} | Computer: ${computerScore}`;
+}
+
 function playARound(userChoice) {
     let computerChoice = computerPlay();
-    let outcome;
 
-    console.log(`You chose ${userChoice}`);
-    console.log(`The computer chose ${computerChoice}`);
+    const resultHeadline = document.querySelector('.choices');
+    const outcome = document.querySelector('.result');
+
+    resultHeadline.textContent = `You chose ${userChoice} - 
+        The computer chose ${computerChoice}`;
 
     if (userChoice === 'rock') {
-        if (computerChoice === 'Rock') return 'Draw!';
-        else if (computerChoice === 'Paper') return 'You lose';
-        else if (computerChoice === 'Scissors') return 'You win!';
+        if (computerChoice === 'Rock') outcome.textContent = 'Draw!';
+        else if (computerChoice === 'Paper') {
+            outcome.textContent = 'You lose';
+            computerScore++;
+        }
+        else if (computerChoice === 'Scissors') {
+            outcome.textContent = 'You win!';
+            playerScore++;
+        }
     } else if (userChoice === 'paper') {
-        if (computerChoice === 'Paper') return 'Draw!';
-        else if (computerChoice === 'Scissors') return 'You lose';
-        else if (computerChoice === 'Rock') return 'You win!';
+        if (computerChoice === 'Paper') outcome.textContent = 'Draw!';
+        else if (computerChoice === 'Scissors') {
+            outcome.textContent = 'You lose';
+            computerScore++;
+        }
+        else if (computerChoice === 'Rock') {
+            outcome.textContent = 'You win!';
+            playerScore++;
+        }
     } else if (userChoice === 'scissors') {
-        if (computerChoice === 'Scissors') return 'Draw!';
-        else if (computerChoice === 'Rock') return 'You lose';
-        else if (computerChoice === 'Paper') return 'You win!';
-    } else {
-        return 'Make a proper choice';
+        if (computerChoice === 'Scissors') outcome.textContent = 'Draw!';
+        else if (computerChoice === 'Rock') {
+            outcome.textContent = 'You lose';
+            computerScore++;
+        }
+        else if (computerChoice === 'Paper') {
+            outcome.textContent = 'You win!';
+            playerScore++;
+        }
     }
+    updateScores();
 }
 
-function game() {
-    for (let i = 1; i <= 5; i++) {
-        console.log(`Round ${i}!!`);
-        let playerChoice = prompt('Rock, paper or Scissors?')
-        playerChoice = playerChoice.toLowerCase();
+const buttons = document.querySelectorAll('button');
 
-        let outcome = playARound(playerChoice);
-        console.log(outcome);
-    }
-}
+buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+        if (button.id === 'reset') reset();
+        else playARound(button.id);
+    });
+});
 
-game();
+
